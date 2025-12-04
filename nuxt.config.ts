@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/hints',
     'shadcn-nuxt',
+    '@pinia/nuxt'
   ],
 
   css: ['~/assets/css/tailwind.css'],

@@ -1,9 +1,18 @@
 {
   "servers": {
-    "nuxt": {
+     "nuxt": {
       "type": "http",
       "url": "https://nuxt.com/mcp"
     },
-
+    "shadcnVue": {
+      "command": "npx",
+      "args": [
+        "shadcn-vue@latest",
+        "mcp"
+      ]
+    },
+    "inkeepMcp": {
+      "url": "https://mcp.inkeep.com/zod/mcp"
+    }
   }
 }

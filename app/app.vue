@@ -1,5 +1,5 @@
 <template>
-  <div>
-    <Button> Botão legal </Button>
-  </div>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>

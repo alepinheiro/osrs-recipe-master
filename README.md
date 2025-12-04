@@ -73,3 +73,27 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+## Commit Message Convention
+
+Este projeto exige que todos os commits sigam o padrão [Conventional Commits](https://www.conventionalcommits.org/pt/v1.0.0/).
+
+**Exemplo de mensagem de commit:**
+
+```
+feat: adiciona busca por itens na tela principal
+fix: corrige erro ao salvar receita
+chore: atualiza dependências do projeto
+```
+
+**Tipos comuns:**
+
+- `feat`: Nova funcionalidade
+- `fix`: Correção de bug
+- `docs`: Mudança na documentação
+- `style`: Formatação, sem alteração de código
+- `refactor`: Refatoração de código
+- `test`: Adição ou correção de testes
+- `chore`: Tarefas de manutenção
+
+Consulte [Conventional Commits](https://www.conventionalcommits.org/pt/v1.0.0/) para detalhes e exemplos.
