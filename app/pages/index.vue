@@ -1,8 +1,17 @@
 <template>
   <div class="py-2 flex flex-col gap-4 max-w-5xl mx-auto">
-    <Card class="px-6 h-24 items-center justify-between flex-row">
+    <Card
+      class="px-6 h-24 items-center justify-between flex-row relative overflow-visible"
+    >
       <h1>⚔️ OSRS Recipe Master</h1>
-      <div class="bg-zinc-300 rounded-2xl h-full w-48"></div>
+      <BasePriceUpdateInterval v-model="priceUpdateInterval">
+        <template #progress="{ progress }">
+          <div
+            class="absolute left-0 -bottom-1 h-1 bg-blue-500 rounded-full transition-all mx-2"
+            :style="{ width: progress + '%', transition: 'width 0.2s linear' }"
+          />
+        </template>
+      </BasePriceUpdateInterval>
     </Card>
 
     <div class="flex gap-4 justify-between items-center">
@@ -48,8 +57,6 @@
 </template>
 
 <script setup lang="ts">
-import { useRecipeStores } from "~/stores/useRecipesStore";
-
 const modalOpen = ref<boolean>(false);
 const recipesStore = useRecipeStores();
 const itemsStore = useItemsStore();
@@ -63,6 +70,9 @@ const newRecipe = ref<Recipe>({
   savedAt: new Date().toLocaleString(),
 });
 const recipes = computed(() => Array.from(recipesStore.recipes.values()));
+
+// Intervalo de atualização em segundos (default: 60)
+const priceUpdateInterval = ref<number>(60);
 
 await useFetch<Array<Item>>(
   () => `https://prices.runescape.wiki/api/v1/osrs/mapping`,

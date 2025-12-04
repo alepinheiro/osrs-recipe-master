@@ -97,3 +97,10 @@ chore: atualiza dependências do projeto
 - `chore`: Tarefas de manutenção
 
 Consulte [Conventional Commits](https://www.conventionalcommits.org/pt/v1.0.0/) para detalhes e exemplos.
+
+## Reutilização de Componentes
+
+Antes de implementar um novo componente, **sempre verifique** se já existe algo reutilizável nas pastas `app/components/ui/` ou `app/components/base/`. Priorize a reutilização e extensão de componentes existentes para manter o projeto consistente e evitar duplicidade.
+
+- Consulte os arquivos `index.ts` das pastas de componentes para saber o que está disponível para importação.
+- Caso não exista um componente adequado, siga os padrões do projeto para criar um novo.

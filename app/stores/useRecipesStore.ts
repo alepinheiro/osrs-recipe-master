@@ -37,5 +37,18 @@ export const useRecipeStores = defineStore("recipes", () => {
     updateRecipe,
     deleteRecipe,
     getAllRecipes,
+    /**
+     * Atualiza os preços de todas as receitas salvas
+     * (implementar lógica real de fetch/preço conforme necessário)
+     */
+    updateAllRecipePrices() {
+      recipes.value.forEach((recipe, id) => {
+        // Exemplo: atualizar campo price com valor fictício
+        // Substitua por lógica real de fetch/preço
+        recipes.value.set(id, {
+          ...recipe,
+        });
+      });
+    },
   };
 });
