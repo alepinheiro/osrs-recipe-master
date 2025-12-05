@@ -137,72 +137,60 @@ const updateRecipePrices = async (): Promise<void> => {
 
   const itemIdsMap = getAllUniqueItemIdsFromRecipes();
   const { data } = await fetchAllLatestPrices();
-  const notifications: string[] = [];
 
   for (const [itemId, recipesToUpdate] of itemIdsMap) {
+    if (!data[itemId]) continue;
+
     // Atualiza o preço do item no store global
-    if (data[itemId]) {
-      itemsStore.updateItem({
-        id: itemId,
-        gePrices: data[itemId],
-      });
-    }
+    itemsStore.updateItem({
+      id: itemId,
+      gePrices: data[itemId],
+    });
 
     for (const recipeId of recipesToUpdate) {
       const recipe = recipesStore.recipes.get(recipeId);
       if (!recipe) continue;
 
-      // Cria cópia profunda para garantir reatividade
-      const updatedRecipe = {
-        ...recipe,
-        inputs: recipe.inputs.map((input) => {
-          if (input.id === itemId && data[itemId]) {
+      let shouldNotify = false;
+      let notificationMsgs: string[] = [];
+
+      const dataMap = (
+        inputs: Recipe["inputs"],
+        itemId: string,
+        prices: Record<string, { high: number; low: number }>,
+      ) =>
+        inputs.map((input) => {
+          if (input.id === itemId && prices[itemId]) {
             const oldPrice = input.buyPrice || 0;
-            const newPrice = data[itemId].low;
-            if (
-              Math.abs(newPrice - oldPrice) / (oldPrice || 1) >=
-              MARGIN_CHANGE_THRESHOLD
-            ) {
-              notifications.push(
-                `Preço atualizado para ${input.name} na receita ${updatedRecipe.name}`,
+            const newPrice = prices[itemId].low;
+            if (newPrice !== oldPrice) {
+              shouldNotify = true;
+              const icon = newPrice > oldPrice ? "⬆️" : "⬇️";
+              notificationMsgs.push(
+                `${icon} '${input.name}' na receita ${recipe.name} alterado de ${oldPrice.toLocaleString()} para ${newPrice.toLocaleString()}`,
               );
             }
             return {
               ...input,
               buyPrice: newPrice,
-              sellPrice: data[itemId].high,
+              sellPrice: prices[itemId].high,
             };
           }
           return { ...input };
-        }),
-        outputs: recipe.outputs.map((output) => {
-          if (output.id === itemId && data[itemId]) {
-            const oldPrice = output.sellPrice || 0;
-            const newPrice = data[itemId].high || data[itemId].low;
-            if (
-              Math.abs(newPrice - oldPrice) / (oldPrice || 1) >=
-              MARGIN_CHANGE_THRESHOLD
-            ) {
-              notifications.push(
-                `Preço atualizado para ${output.name} na receita ${updatedRecipe.name}`,
-              );
-            }
-            return {
-              ...output,
-              buyPrice: data[itemId].low,
-              sellPrice: newPrice,
-            };
-          }
-          return { ...output };
-        }),
-      };
-      recipesStore.updateRecipe(recipeId, updatedRecipe);
-    }
-  }
+        });
 
-  // Exibe notificações agrupadas
-  if (notifications.length > 0) {
-    notifications.forEach((msg) => toast.success(msg));
+      // Cria cópia profunda para garantir reatividade
+      const updatedRecipe = {
+        ...recipe,
+        inputs: dataMap(recipe.inputs, itemId, data),
+        outputs: dataMap(recipe.outputs, itemId, data),
+      };
+
+      recipesStore.updateRecipe(recipeId, updatedRecipe);
+      if (shouldNotify && notificationMsgs.length > 0) {
+        notificationMsgs.forEach((msg) => toast.info(msg));
+      }
+    }
   }
 };
 

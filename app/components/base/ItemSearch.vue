@@ -13,7 +13,7 @@
       </Button>
     </PopoverTrigger>
     <PopoverContent class="p-0">
-      <Command class="">
+      <Command>
         <CommandInput class="h-9" placeholder="Procure um item..." />
         <CommandList>
           <CommandEmpty> Nenhum item encontrado. </CommandEmpty>
