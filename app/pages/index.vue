@@ -62,7 +62,6 @@ const recipes = computed(() => Array.from(recipesStore.recipes.values()));
 
 // Intervalo de atualização em segundos (default: 60)
 const priceUpdateInterval = ref<number>(60);
-const MARGIN_CHANGE_THRESHOLD = 0.01; // 0.1% para evitar spam
 
 await useFetch<Array<Item>>(
   () => "https://prices.runescape.wiki/api/v1/osrs/mapping",
@@ -167,7 +166,8 @@ const updateRecipePrices = async (): Promise<void> => {
               shouldNotify = true;
               const icon = newPrice > oldPrice ? "⬆️" : "⬇️";
               notificationMsgs.push(
-                `${icon} '${input.name}' na receita ${recipe.name} alterado de ${oldPrice.toLocaleString()} para ${newPrice.toLocaleString()}`,
+                `${icon} '${input.name}' | '${recipe.name}' alterado de ` +
+                  ` ${oldPrice.toLocaleString()} ${icon} ${newPrice.toLocaleString()} ${icon}`,
               );
             }
             return {

@@ -143,7 +143,7 @@ const onSaveRecipe = () => {
     id: crypto.randomUUID(),
     savedAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    autoUpdatePrices: false,
+    autoUpdatePrices: true,
   };
 };
 </script>
