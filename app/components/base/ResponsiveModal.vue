@@ -7,8 +7,8 @@
     </component>
     <component
       :is="Modal.Content"
-      class="max-w-5xl w-full"
-      :class="[{ 'px-2 pb-8 *:px-4': !isDesktop }]"
+      class="max-w-5xl w-11/12"
+      :class="[isDesktop ? ' px-5 ' : 'px-2 pb-8 *:px-4']"
     >
       <component :is="Modal.Header">
         <component :is="Modal.Title">

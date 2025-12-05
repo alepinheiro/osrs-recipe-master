@@ -5,6 +5,12 @@
       <BaseRecipeItemRow
         v-if="model[index]"
         v-model="model[index]"
+        :items="
+          itemsStore.items.map((item) => ({
+            label: item.name,
+            value: item.id,
+          }))
+        "
         @update="onUpdateRow(index, model[index])"
         @remove="onRemoveRow(index)"
       />
@@ -18,7 +24,7 @@
       <Button
         variant="outline"
         @click="onAddTax"
-        :disabled="model.some((i) => i.itemId === 999999)"
+        :disabled="model.some((i) => i.id === `999999`)"
       >
         <Coins />
         Adicionar Taxas
@@ -32,9 +38,12 @@
 <script setup lang="ts">
 import { Coins, Plus } from "lucide-vue-next";
 import { toast } from "vue-sonner";
+import { computed, watch } from "vue";
 
 const itemsStore = useItemsStore();
-const taxItem = itemsStore.itemsMap.get(999999);
+
+// taxItem reativo
+const taxItem = computed(() => itemsStore.itemsMap.get("999999"));
 
 const model = defineModel<Recipe["inputs"]>({
   required: true,
@@ -43,34 +52,33 @@ const model = defineModel<Recipe["inputs"]>({
 const emit = defineEmits(["add-input", "add-tax", "update-row", "remove-row"]);
 
 const addInput = () => {
-  console.log("Adding input");
   model.value.push({
-    id: "",
-    itemId: 0,
+    id: "0",
     quantity: 1,
     buyPrice: 0,
     highAlch: 0,
     sellPrice: 0,
-    itemName: "",
+    name: "",
   });
 };
 
 const onAddTax = () => {
-  if (!taxItem) return;
+  if (!taxItem.value) return;
   model.value.push({
     id: "999999",
-    itemId: 999999,
     quantity: 1,
     buyPrice: 1,
-    highAlch: taxItem.highalch,
+    highAlch: taxItem.value.highalch,
     sellPrice: 1,
-    itemName: taxItem.name,
+    name: taxItem.value.name,
   });
 };
 
 const onUpdateRow = async (index: number, updatedRow: ItemRow) => {
-  if (updatedRow.id === `${taxItem?.id}`) {
-    if (model.value.some((i) => i.itemId === 999999)) {
+  if (!taxItem.value) return;
+
+  if (updatedRow.id === taxItem.value.id) {
+    if (model.value.some((i) => taxItem.value && i.id === taxItem.value.id)) {
       model.value.splice(index, 1);
       return;
     }
@@ -78,6 +86,7 @@ const onUpdateRow = async (index: number, updatedRow: ItemRow) => {
     model.value.splice(index, 1);
     return;
   }
+
   const { data: priceResponse } = await $fetch<OsrsItemPriceResponse>(
     `https://prices.runescape.wiki/api/v1/osrs/latest?id=${updatedRow.id}`,
   );
@@ -100,17 +109,16 @@ const onUpdateRow = async (index: number, updatedRow: ItemRow) => {
   }
 
   if (success) {
-    const itemData = itemsStore.itemsMap.get(parseInt(updatedRow.id));
+    const itemData = itemsStore.itemsMap.get(updatedRow.id);
     if (!itemData) throw new Error("Item data not found in store");
 
     model.value[index] = {
       id: updatedRow.id,
-      itemName: itemData.name,
+      name: itemData.name,
       buyPrice: parsedData.low,
       sellPrice: parsedData.high,
       highAlch: itemData.highalch,
       quantity: updatedRow.quantity,
-      itemId: parseInt(updatedRow.id),
     };
   }
 };

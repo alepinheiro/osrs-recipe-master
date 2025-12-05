@@ -21,7 +21,6 @@
 import { ref, watch } from "vue";
 import { useProgressTimer } from "@/lib/useProgressTimer";
 const modelValue = defineModel<number>({ required: true });
-const emit = defineEmits(["interval-changed"]);
 
 const inputValue = ref(modelValue);
 const { progress, restartTimer } = useProgressTimer(modelValue);
@@ -34,7 +33,6 @@ function onChange(e: Event) {
   const value = Number((e.target as HTMLInputElement).value);
   if (!isNaN(value)) {
     modelValue.value = value;
-    emit("interval-changed", value);
     restartTimer();
   }
 }

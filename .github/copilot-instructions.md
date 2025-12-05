@@ -1,70 +1,74 @@
-# OSRS Recipe Master V2 — AI Agent Instructions
+# OSRS Recipe Master V2 — Copilot Instructions
 
-## Project Overview
+## Visão Geral do Projeto
 
-This is a Nuxt 4 web application for managing OSRS (Old School RuneScape) item recipes. It uses Vue 3, Pinia for state management, Tailwind CSS for styling, and shadcn-vue/reka-ui for UI components. The architecture is modular, with UI primitives in `app/components/ui/`, business logic in `app/components/base/`, and shared types in `shared/types/`.
+Este é um aplicativo web Nuxt 4 para gerenciamento de receitas de itens do OSRS (Old School RuneScape). Utiliza Vue 3, Pinia para gerenciamento de estado, Tailwind CSS para estilização e shadcn-vue/reka-ui para componentes de UI. A arquitetura é modular:
 
-## Key Architectural Patterns
+- Primitivos de UI: `app/components/ui/` (exportados via `index.ts`)
+- Componentes de lógica de negócio: `app/components/base/`
+- Tipos compartilhados: `shared/types/`
 
-- **Component Organization:**
-  - UI primitives (buttons, cards, dialogs, etc.) are in `app/components/ui/` and exported via `index.ts` files for easy import.
-  - Business logic and recipe-specific components are in `app/components/base/`.
-  - Shared types for recipes/items are in `shared/types/`.
-- **State Management:**
-  - Uses Pinia stores (`app/stores/useItemsStore.ts`, `app/stores/useRecipesStore.ts`).
-- **Styling:**
-  - Tailwind CSS is configured in `app/assets/css/tailwind.css` and referenced in `nuxt.config.ts`.
+## Padrões Arquiteturais
+
+- **Organização de Componentes:**
+  - Primitivos de UI (botões, cards, dialogs, etc.) em `app/components/ui/`, exportados por `index.ts`.
+  - Lógica de negócio e componentes de receita em `app/components/base/`.
+  - Tipos compartilhados em `shared/types/`.
+- **Gerenciamento de Estado:**
+  - Pinia stores em `app/stores/useItemsStore.ts` e `app/stores/useRecipesStore.ts`.
+- **Estilização:**
+  - Tailwind CSS em `app/assets/css/tailwind.css` (referenciado em `nuxt.config.ts`).
 - **UI Libraries:**
-  - Uses shadcn-vue and reka-ui for composable UI primitives. Component registry and aliases are defined in `components.json`.
+  - shadcn-vue e reka-ui para UI. Registro de componentes e aliases em `components.json`.
 
-## Developer Workflows
+## Fluxos de Trabalho do Desenvolvedor
 
-- **Install dependencies:**
-  - `bun install` (or `npm/pnpm/yarn install`)
-- **Development server:**
-  - `bun run dev` (or `npm run dev`, etc.)
-- **Build for production:**
-  - `bun run build` (or `npm run build`, etc.)
-- **Preview production build:**
-  - `bun run preview` (or `npm run preview`, etc.)
-- **Linting:**
-  - ESLint is enabled via `@nuxt/eslint` (see `nuxt.config.ts`).
+- **Instalar dependências:**
+  - `bun install` (ou `npm/pnpm/yarn install`)
+- **Servidor de desenvolvimento:**
+  - `bun run dev` (ou `npm run dev` etc.)
+- **Build para produção:**
+  - `bun run build` (ou `npm run build` etc.)
+- **Preview da build:**
+  - `bun run preview` (ou `npm run preview` etc.)
+- **Lint:**
+  - ESLint via `@nuxt/eslint` (ver `nuxt.config.ts`).
 
-## Project-Specific Conventions
+## Convenções do Projeto
 
-- **Component Imports:**
-  - Always import UI primitives from their respective `index.ts` barrel files (e.g., `import { Button } from '@/components/ui/button'`).
+- **Importação de Componentes:**
+  - Sempre importe primitivos de UI via seus `index.ts` (ex: `import { Button } from '@/components/ui/button'`).
 - **TypeScript:**
-  - All components and stores use TypeScript. Shared types are in `shared/types/`.
+  - Todos os componentes e stores usam TypeScript. Tipos em `shared/types/`.
 - **Aliases:**
-  - Use Nuxt aliases as defined in `components.json` (e.g., `@/components`, `@/lib/utils`).
+  - Use aliases Nuxt conforme `components.json` (ex: `@/components`, `@/lib/utils`).
 - **Props/Emits:**
-  - Use `defineProps`/`defineEmits` and composable helpers from reka-ui for prop forwarding and event handling.
-- **Data Flow:**
-  - Recipe data flows from Pinia stores to components via props and v-model.
-- **API Requests:**
+  - Use `defineProps`/`defineEmits` e helpers do reka-ui para props e eventos.
+- **Fluxo de Dados:**
+  - Dados de receita fluem dos stores Pinia para componentes via props e v-model.
+- **Requisições/API:**
   - Sempre consulte a documentação oficial do Nuxt para escolher a melhor abordagem de fetch/requisições (ex: useFetch, $fetch, composables, SSR/caching). Priorize métodos recomendados para SSR, reatividade e performance.
 
-## Integration Points
+## Integrações
 
-- **External Libraries:**
-  - shadcn-vue, reka-ui, lucide-vue-next (icons), @vueuse/core (composables).
-- **Nuxt Modules:**
-  - See `nuxt.config.ts` for enabled modules (e.g., `@nuxt/eslint`, `@pinia/nuxt`).
+- **Bibliotecas externas:**
+  - shadcn-vue, reka-ui, lucide-vue-next (ícones), @vueuse/core (composables).
+- **Módulos Nuxt:**
+  - Veja `nuxt.config.ts` para módulos habilitados (ex: `@nuxt/eslint`, `@pinia/nuxt`).
 
-## Examples
+## Exemplos
 
-- **UI Primitive Usage:**
-  - `app/components/base/RecipeCard.vue` and `RecipeForm.vue` show how to compose UI primitives and business logic.
-- **State Usage:**
-  - `app/app.vue` demonstrates store usage and recipe rendering.
+- **Uso de UI Primitives:**
+  - Veja `app/components/base/RecipeCard.vue` e `RecipeForm.vue` para composição de UI e lógica.
+- **Uso de State:**
+  - Veja `app/app.vue` para uso de stores e renderização de receitas.
 
 ## Troubleshooting
 
-- If `bun run dev` fails, check for missing dependencies or misconfigured aliases in `components.json` and `nuxt.config.ts`.
-- For component registry issues, verify `components.json` and shadcn-vue configuration.
+- Se `bun run dev` falhar, cheque dependências ou aliases em `components.json` e `nuxt.config.ts`.
+- Para problemas de registro de componentes, verifique `components.json` e configuração do shadcn-vue.
 
-## References
+## Referências
 
-- Key files: `nuxt.config.ts`, `components.json`, `app/components/ui/`, `app/components/base/`, `shared/types/`, `app/stores/`
-  For more, see README.md and Nuxt documentation.
+- Arquivos-chave: `nuxt.config.ts`, `components.json`, `app/components/ui/`, `app/components/base/`, `shared/types/`, `app/stores/`
+- Para mais, veja README.md e a documentação do Nuxt.

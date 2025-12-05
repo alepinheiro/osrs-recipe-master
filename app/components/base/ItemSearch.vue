@@ -8,7 +8,7 @@
         class="w-auto grow justify-between"
         :disabled="selectedOption === `999999`"
       >
-        {{ selectedFramework?.label || "Selecione um item..." }}
+        {{ selectedPlaceholder?.label || "Selecione um item..." }}
         <ChevronsUpDownIcon class="opacity-50" />
       </Button>
     </PopoverTrigger>
@@ -64,20 +64,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-const itemsStore = useItemsStore();
-
-const items = itemsStore.items.map((item) => ({
-  label: item.name,
-  value: `${item.id}`,
-}));
+const props = defineProps<{
+  items: Array<{ label: string; value: string }>;
+}>();
 
 const open = ref(false);
 
 const emit = defineEmits<{ (e: "update", value: string): void }>();
 const selectedOption = defineModel<string>();
 
-const selectedFramework = computed(() =>
-  items.find((item) => item.value === selectedOption.value),
+const selectedPlaceholder = computed(() =>
+  props.items.find((item) => item.value === selectedOption.value),
 );
 
 function selectOption(selectedValue: string) {

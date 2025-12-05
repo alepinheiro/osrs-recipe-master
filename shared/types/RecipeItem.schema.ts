@@ -2,8 +2,7 @@ import { z } from "zod";
 
 export const RecipeItemSchema = z.object({
   id: z.string(),
-  itemId: z.number().nullable(),
-  itemName: z.string(),
+  name: z.string(),
   quantity: z.number(),
   buyPrice: z.number(),
   sellPrice: z.number(),

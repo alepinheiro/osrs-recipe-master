@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main class="px-5 py-2">
     <slot />
     <Toaster />
   </main>

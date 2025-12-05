@@ -67,6 +67,7 @@
         <Label> Usar High Alch </Label>
         <Switch v-model="unfinishedRecipe.highAlchMode" />
       </div>
+
       <div class="flex gap-2 w-full">
         <Input placeholder="Nome da receita" v-model="unfinishedRecipe.name" />
         <Button class="ml-auto" @click="onSaveRecipe"> Salvar Receita </Button>
@@ -120,7 +121,8 @@ const estimatedProfit = computed(() => {
 });
 
 const onSaveRecipe = () => {
-  unfinishedRecipe.value.savedAt = new Date().toLocaleString();
+  unfinishedRecipe.value.savedAt = new Date().toISOString();
+  unfinishedRecipe.value.updatedAt = new Date().toISOString();
   const result = RecipeSchema.safeParse(unfinishedRecipe.value);
   if (result.error) {
     console.error("Erro de validação da receita:", result.error);
@@ -139,7 +141,9 @@ const onSaveRecipe = () => {
     outputs: [],
     highAlchMode: false,
     id: crypto.randomUUID(),
-    savedAt: new Date().toLocaleString(),
+    savedAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    autoUpdatePrices: false,
   };
 };
 </script>

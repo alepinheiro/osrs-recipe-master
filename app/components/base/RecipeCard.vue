@@ -1,13 +1,17 @@
 <template>
-  <Card class="overflow-hidden hover:shadow-md transition-shadow">
+  <Card class="overflow-hidden gap-0 hover:shadow-md transition-shadow">
     <CardHeader>
       <div class="flex items-center justify-between">
         <div>
-          <CardTitle class="text-base">
+          <CardTitle class="text-lg">
             {{ model.name }}
           </CardTitle>
+
           <p class="text-xs text-muted-foreground">
-            Salvo em: {{ model.savedAt }}
+            Salvo em: {{ formatDate(model.savedAt) }}
+          </p>
+          <p v-if="model.updatedAt" class="text-xs text-muted-foreground">
+            Atualizado em: {{ formatDate(model.updatedAt) }}
           </p>
 
           <div
@@ -31,7 +35,7 @@
           </div>
         </div>
 
-        <div class="flex gap-2">
+        <div class="flex gap-2 items-center">
           <BaseResponsiveModal v-model:open="modalOpen">
             <template #trigger>
               <Button size="sm" variant="secondary">
@@ -61,7 +65,7 @@
     </CardHeader>
 
     <CardContent class="space-y-3">
-      <div class="flex gap-8 text-sm">
+      <!-- <div class="flex gap-8 text-sm">
         <div>
           <p class="text-muted-foreground">Custo (Insta)</p>
           <p class="font-semibold">{{ formatGP(recipeCost) }} gp</p>
@@ -72,8 +76,11 @@
             {{ formatGP(recipeRevenue) }} gp
           </p>
         </div>
-      </div>
-      <div class="bg-emerald-50 dark:bg-emerald-950/30 rounded-lg p-3">
+      </div> -->
+      <div
+        :class="[recipeProfit > 0 ? 'bg-emerald-50' : 'bg-red-50']"
+        class="rounded-lg p-3"
+      >
         <p class="text-xs text-muted-foreground">Lucro Liquido</p>
         <p
           :class="[recipeProfit > 0 ? 'text-emerald-600' : 'text-red-600']"
@@ -86,81 +93,71 @@
         </p>
       </div>
       <div class="space-y-2">
-        <Collapsible>
-          <CollapsibleTrigger
-            class="flex items-center gap-2 text-sm hover:text-foreground text-muted-foreground w-full"
-          >
-            <ChevronRight
-              class="h-4 w-4 transition-transform data-[state=open]:rotate-90"
-            />
-            <Sparkles class="h-4 w-4 text-amber-500" />
-            Inputs ({{ model.inputs.length }})
-          </CollapsibleTrigger>
-          <CollapsibleContent class="pl-6 pt-2 space-y-1">
-            <ul>
-              <li
-                v-for="input in model.inputs"
-                class="text-sm text-muted-foreground"
-              >
-                {{ input.quantity }}x
-                {{ input.itemName || "Item não selecionado" }}
-              </li>
-            </ul>
-          </CollapsibleContent>
-        </Collapsible>
-        <Collapsible>
-          <CollapsibleTrigger
-            class="flex items-center gap-2 text-sm hover:text-foreground text-muted-foreground w-full"
-          >
-            <ChevronRight
-              class="h-4 w-4 transition-transform data-[state=open]:rotate-90"
-            />
-            <Package class="h-4 w-4 text-amber-500" />
-            Outputs ({{ model.outputs.length }})
-          </CollapsibleTrigger>
-          <CollapsibleContent class="pl-6 pt-2 space-y-1">
-            <ul>
-              <li
-                v-for="output in model.outputs"
-                class="text-sm text-muted-foreground"
-              >
-                {{ output.quantity }}x
-                {{ output.itemName || "Item não selecionado" }}
-              </li>
-            </ul>
-          </CollapsibleContent>
-        </Collapsible>
+        <CollapsibleList
+          :title="'Inputs'"
+          :icon="Sparkles"
+          :items="model.inputs"
+        >
+        </CollapsibleList>
+        <CollapsibleList
+          :title="'Outputs'"
+          :icon="Package"
+          :items="model.outputs"
+        >
+        </CollapsibleList>
       </div>
     </CardContent>
+
+    <CardFooter>
+      <div class="flex items-center gap-1 mr-2">
+        <Switch v-model="model.autoUpdatePrices" />
+        <span class="text-xs text-muted-foreground">
+          Atualizar preços automaticamente
+        </span>
+      </div>
+    </CardFooter>
   </Card>
 </template>
 
 <script setup lang="ts">
-import { ChevronRight, Trash2, Package, Sparkles, Edit } from "lucide-vue-next";
-const formatGP = (value: number) => {
-  return value.toLocaleString("pt-BR");
-};
-
-const modalOpen = ref(<boolean>false);
+import { Trash2, Package, Sparkles, Edit } from "lucide-vue-next";
+import CollapsibleList from "./recipe/CollapsibleList.vue";
+import { useRecipeStores } from "@/stores/useRecipesStore";
+import { formatDateLocale } from "@/utils/dateLocale";
 
 const model = defineModel<Recipe>({
   required: true,
 });
-
-const recipeCost = model.value.inputs.reduce(
-  (acc, item) => acc + item.buyPrice * item.quantity,
-  0,
+const modalOpen = ref<boolean>(false);
+const recipesStore = useRecipeStores();
+const recipeCost = computed(() =>
+  model.value.inputs.reduce(
+    (acc, item) => acc + (item.buyPrice ?? 0) * (item.quantity ?? 0),
+    0,
+  ),
 );
 
-const recipeRevenue = model.value.highAlchMode
-  ? model.value.outputs.reduce(
-      (acc, item) => acc + (item.highAlch || 0) * item.quantity,
-      0,
-    )
-  : model.value.outputs.reduce(
-      (acc, item) => acc + item.sellPrice * item.quantity,
-      0,
-    );
-const recipeProfit = recipeRevenue - recipeCost;
-const recipeMargin = recipeCost > 0 ? (recipeProfit / recipeCost) * 100 : 0;
+const recipeRevenue = computed(() =>
+  model.value.highAlchMode
+    ? model.value.outputs.reduce(
+        (acc, item) => acc + (item.highAlch ?? 0) * (item.quantity ?? 0),
+        0,
+      )
+    : model.value.outputs.reduce(
+        (acc, item) => acc + (item.sellPrice ?? 0) * (item.quantity ?? 0),
+        0,
+      ),
+);
+
+const recipeProfit = computed(() => recipeRevenue.value - recipeCost.value);
+const recipeMargin = computed(() => recipesStore.calculateMargin(model.value));
+
+const formatGP = (value: number) => {
+  return value.toLocaleString();
+};
+
+const formatDate = (date: string | Date) => {
+  if (!date) return "";
+  return formatDateLocale(date, "dd MMM yyyy, HH:mm:ss", "pt-BR");
+};
 </script>
