@@ -43,6 +43,36 @@ import RecipeList from "@/components/base/RecipeList.vue";
 import { useIntervalFn } from "@vueuse/core";
 import { toast } from "vue-sonner";
 
+definePageMeta({
+  title: "OSRS Recipe Master — Todas as Receitas",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Veja, crie e gerencie receitas de itens do Old School RuneScape.",
+    },
+    { property: "og:title", content: "OSRS Recipe Master — Todas as Receitas" },
+    {
+      property: "og:description",
+      content:
+        "Veja, crie e gerencie receitas de itens do Old School RuneScape.",
+    },
+    { property: "og:type", content: "website" },
+    { property: "og:image", content: "/og-image.png" },
+    { name: "twitter:card", content: "summary_large_image" },
+    {
+      name: "twitter:title",
+      content: "OSRS Recipe Master — Todas as Receitas",
+    },
+    {
+      name: "twitter:description",
+      content:
+        "Veja, crie e gerencie receitas de itens do Old School RuneScape.",
+    },
+    { name: "twitter:image", content: "/og-image.png" },
+  ],
+});
+
 const modalOpen = ref<boolean>(false);
 const recipesStore = useRecipeStores();
 const itemsStore = useItemsStore();
