@@ -133,6 +133,8 @@ export const useRecipeStores = defineStore(
     };
   },
   {
-    persist: true,
+    persist: {
+      storage: piniaPluginPersistedstate.localStorage(),
+    },
   },
 );

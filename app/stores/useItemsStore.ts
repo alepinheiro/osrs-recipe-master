@@ -33,9 +33,15 @@ export const useItemsStore = defineStore(
      * Atualiza todos os itens do mapa, garantindo reatividade.
      */
     const updateItems = (newItems: Array<Item>) => {
-      newItems.push(TAX_ITEM);
-      for (const item of newItems) {
-        itemsMap.value.set(`${item.id}`, { ...item, id: `${item.id}` });
+      try {
+        const newMap = new Map<string, Item>();
+        newItems.push(TAX_ITEM);
+        for (const item of newItems) {
+          newMap.set(`${item.id}`, { ...item, id: `${item.id}` });
+        }
+        itemsMap.value = newMap;
+      } catch (error) {
+        console.error("Error updating items:", error);
       }
     };
 
@@ -70,11 +76,15 @@ export const useItemsStore = defineStore(
       });
     };
 
-    const items = computed(() => Array.from(itemsMap.value.values()));
+    const items = computed(() =>
+      itemsMap.value.size ? Array.from(itemsMap.value.values()) : [],
+    );
 
     return { items, itemsMap, updateItems, addItem, removeItem, updateItem };
   },
   {
-    persist: true,
+    persist: {
+      storage: piniaPluginPersistedstate.localStorage(),
+    },
   },
 );
