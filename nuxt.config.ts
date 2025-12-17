@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     "@nuxt/hints",
     "shadcn-nuxt",
     "@pinia/nuxt",
+    "pinia-plugin-persistedstate/nuxt",
   ],
 
   css: ["~/assets/css/tailwind.css"],
