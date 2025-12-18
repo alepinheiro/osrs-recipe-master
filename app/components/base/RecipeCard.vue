@@ -36,7 +36,11 @@
         </div>
 
         <div class="flex gap-2 items-center">
-          <Button size="sm" variant="secondary" @click="onDuplicate()">
+          <Button
+            size="sm"
+            variant="secondary"
+            @click="recipesStore.duplicateRecipe(model.id)"
+          >
             <CopyPlus class="h-4 w-4" />
             Duplicar
           </Button>
@@ -152,9 +156,5 @@ const formatGP = (value: number) => {
 const formatDate = (date: string | Date) => {
   if (!date) return "";
   return formatDateLocale(date, "dd MMM yyyy, HH:mm:ss", "pt-BR");
-};
-
-const onDuplicate = () => {
-  recipesStore.duplicateRecipe(model.value.id);
 };
 </script>

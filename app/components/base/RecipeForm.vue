@@ -131,7 +131,12 @@ const onSaveRecipe = () => {
     }
     return;
   }
-  recipeStore.addRecipe(result.data);
+  const existingRecipe = recipeStore.getRecipe(unfinishedRecipe.value.id);
+  if (existingRecipe) {
+    recipeStore.updateRecipe(unfinishedRecipe.value.id, result.data);
+  } else {
+    recipeStore.addRecipe(result.data);
+  }
   toast.success("Receita salva com sucesso!");
   emit("saved");
   unfinishedRecipe.value = {

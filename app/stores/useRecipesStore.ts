@@ -99,11 +99,11 @@ export const useRecipeStores = defineStore(
           updatedAt: changed ? new Date().toISOString() : recipe.updatedAt,
         };
         // Atualiza histórico de margem se inputs/outputs mudaram
-        const newRecipe = recipes.value[idx];
-        if (newRecipe) {
-          const margin = calculateMargin(newRecipe);
-          updateRecipeMarginHistory(id, margin);
-        }
+        // const newRecipe = recipes.value[idx];
+        // if (newRecipe) {
+        //   const margin = calculateMargin(newRecipe);
+        //   updateRecipeMarginHistory(id, margin);
+        // }
       }
     }
 

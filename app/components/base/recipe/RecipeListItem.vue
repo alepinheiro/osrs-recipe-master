@@ -55,7 +55,7 @@ defineProps<{
 const itemStore = useItemsStore();
 
 const itemData = (id: string) => {
-  const data = itemStore.itemsMap.get(id);
+  const data = itemStore.items.find((item) => id === item.id);
   if (!data) return null;
   return data;
 };

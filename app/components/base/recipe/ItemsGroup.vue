@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { Coins, Plus } from "lucide-vue-next";
 import { toast } from "vue-sonner";
-import { computed, watch } from "vue";
+import { computed } from "vue";
 
 const itemsStore = useItemsStore();
 
