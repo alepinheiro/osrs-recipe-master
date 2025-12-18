@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="recipes.length === 0">
+    <div v-if="!recipes || recipes.length === 0">
       <div
         class="flex flex-col items-center justify-center py-12 text-zinc-500 gap-2 bg-zinc-100 rounded border-zinc-300 border-dashed border-2"
       >

@@ -43,7 +43,9 @@ import { computed, watch } from "vue";
 const itemsStore = useItemsStore();
 
 // taxItem reativo
-const taxItem = computed(() => itemsStore.itemsMap.get("999999"));
+const taxItem = computed(() =>
+  itemsStore.items.find((item) => item.id === "999999"),
+);
 
 const model = defineModel<Recipe["inputs"]>({
   required: true,
@@ -109,7 +111,7 @@ const onUpdateRow = async (index: number, updatedRow: ItemRow) => {
   }
 
   if (success) {
-    const itemData = itemsStore.itemsMap.get(updatedRow.id);
+    const itemData = itemsStore.items.find((item) => item.id === updatedRow.id);
     if (!itemData) throw new Error("Item data not found in store");
 
     model.value[index] = {

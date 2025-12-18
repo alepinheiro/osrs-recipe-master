@@ -36,6 +36,11 @@
         </div>
 
         <div class="flex gap-2 items-center">
+          <Button size="sm" variant="secondary" @click="onDuplicate()">
+            <CopyPlus class="h-4 w-4" />
+            Duplicar
+          </Button>
+
           <BaseResponsiveModal v-model:open="modalOpen">
             <template #trigger>
               <Button size="sm" variant="secondary">
@@ -65,18 +70,6 @@
     </CardHeader>
 
     <CardContent class="space-y-3">
-      <!-- <div class="flex gap-8 text-sm">
-        <div>
-          <p class="text-muted-foreground">Custo (Insta)</p>
-          <p class="font-semibold">{{ formatGP(recipeCost) }} gp</p>
-        </div>
-        <div>
-          <p class="text-muted-foreground">Receita</p>
-          <p class="font-semibold text-emerald-600">
-            {{ formatGP(recipeRevenue) }} gp
-          </p>
-        </div>
-      </div> -->
       <div
         :class="[recipeProfit > 0 ? 'bg-emerald-50' : 'bg-red-50']"
         class="rounded-lg p-3"
@@ -120,7 +113,7 @@
 </template>
 
 <script setup lang="ts">
-import { Trash2, Package, Sparkles, Edit } from "lucide-vue-next";
+import { Trash2, Package, Sparkles, Edit, CopyPlus } from "lucide-vue-next";
 import CollapsibleList from "./recipe/CollapsibleList.vue";
 import { useRecipeStores } from "@/stores/useRecipesStore";
 import { formatDateLocale } from "@/utils/dateLocale";
@@ -159,5 +152,9 @@ const formatGP = (value: number) => {
 const formatDate = (date: string | Date) => {
   if (!date) return "";
   return formatDateLocale(date, "dd MMM yyyy, HH:mm:ss", "pt-BR");
+};
+
+const onDuplicate = () => {
+  recipesStore.duplicateRecipe(model.value.id);
 };
 </script>

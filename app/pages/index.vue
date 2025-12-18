@@ -88,9 +88,7 @@ const newRecipe = ref<Recipe>({
   autoUpdatePrices: true,
 });
 
-const recipes = computed(() =>
-  recipesStore.recipes.size ? Array.from(recipesStore.recipes.values()) : [],
-);
+const recipes = computed(() => recipesStore.getAllRecipes());
 
 // Intervalo de atualização em segundos (default: 60)
 const priceUpdateInterval = ref<number>(60);
@@ -179,7 +177,7 @@ const updateRecipePrices = async (): Promise<void> => {
     });
 
     for (const recipeId of recipesToUpdate) {
-      const recipe = recipesStore.recipes.get(recipeId);
+      const recipe = recipesStore.getRecipe(recipeId);
       if (!recipe) continue;
 
       let shouldNotify = false;
