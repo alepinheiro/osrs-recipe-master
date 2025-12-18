@@ -65,7 +65,11 @@
             </template>
           </BaseResponsiveModal>
 
-          <Button size="sm" variant="destructive">
+          <Button
+            size="sm"
+            variant="destructive"
+            @click="recipesStore.deleteRecipe(model.id)"
+          >
             <Trash2 class="h-4 w-4" />
             Excluir
           </Button>

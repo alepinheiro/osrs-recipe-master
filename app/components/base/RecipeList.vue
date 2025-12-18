@@ -10,7 +10,7 @@
         </span>
       </div>
     </div>
-    <div v-else class="flex flex-col gap-2">
+    <div v-else v-auto-animate class="flex flex-col gap-2">
       <BaseRecipeCard
         v-for="recipe of recipes"
         :key="recipe.id"
